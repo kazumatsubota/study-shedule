@@ -1,6 +1,10 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import { initializeFirebaseApp } from './firebase/firebase'
+import {getApp} from 'firebase/app'
+initializeFirebaseApp()
+
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -13,7 +17,9 @@ export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
-}) {
+}) 
+{
+  console.log(getApp())
   return (
     <html lang="en">
       <body className={inter.className}>{children}</body>
