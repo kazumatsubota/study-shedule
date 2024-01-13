@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Users {
+  userId     String    @id @default(uuid()) @map("user_id")
+  firebaseId String    @unique @map("firebase_id")
+  email      String    @unique
+  name       String?
+  schedules  Schedules[]
+  records    Records[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+}
+
+model Schedules {
+  scheduleId String   @id @default(uuid()) @map("schedule_id")
+  userId     String
+  user       Users    @relation(fields: [userId], references: [userId])
+  dayOfWeekId String @map("day_of_week_id")
+  dayOfWeek  DaysOfWeek @relation(fields: [dayOfWeekId], references: [dayOfWeekId])
+  duration   Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  deletedAt  DateTime?
+}
+
+model Records {
+  recordId   String   @id @default(uuid())
+  userId     String
+  date       DateTime
+  duration   Int
+  note       String?
+  user       Users    @relation(fields: [userId], references: [userId])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  deletedAt  DateTime?
+}
+
+model DaysOfWeek {
+  dayOfWeekId String @id @default(uuid()) @map("day_of_week_id")
+  name       String
+  schedules  Schedules[]
+}
